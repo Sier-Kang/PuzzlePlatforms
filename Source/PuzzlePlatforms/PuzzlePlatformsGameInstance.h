@@ -34,4 +34,15 @@ public:
 	*/
 	UFUNCTION(Exec)
 	void Join(const FString& Address);
+
+	/**
+	* Load Menu
+	* @param Comment
+	* @return Comment
+	*/
+	UFUNCTION(BlueprintCallable)
+	void LoadMenu();
+
+private:
+	TSubclassOf<class UUserWidget> MenuClass;
 };

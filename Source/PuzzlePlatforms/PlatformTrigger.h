@@ -28,7 +28,7 @@ private:
 	 * Trigger volume to trigger the platforms.
 	 */
 	UPROPERTY(VisibleAnywhere)
-	class UBoxComponent* TriggerVolume;
+	class UBoxComponent* TriggerVolume; 
 
 	/**
 	 * Platforms that triggers
