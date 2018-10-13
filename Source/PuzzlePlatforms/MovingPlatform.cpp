@@ -17,9 +17,11 @@ void AMovingPlatform::BeginPlay()
 
 	if (HasAuthority()) 
 	{
+		// Actor's Replication
 		SetReplicates(true);
 		SetReplicateMovement(true);
 
+		// Move Props
 		WorldStartLocation = GetActorLocation();
 		WorldEndLocation = GetTransform().TransformPosition(TargetLocation);
 	}
@@ -32,18 +34,18 @@ void AMovingPlatform::Tick(float DeltaTime)
 	if (HasAuthority())
 	{
 		FVector ActorLocation = GetActorLocation();
+		float TotalLength = (WorldEndLocation - WorldStartLocation).Size();
 		float CurrentLength = (WorldEndLocation - ActorLocation).Size();
-		float TotalLength = (WorldStartLocation - WorldEndLocation).Size();
-		FVector MoveDirection = WorldEndLocation - WorldStartLocation;
+		FVector MoveDirection = (WorldEndLocation - WorldStartLocation).GetSafeNormal();
 
-		if (CurrentLength > TotalLength)
+		if (CurrentLength >= TotalLength)
 		{
 			FVector SwapLocation = WorldStartLocation;
 			WorldStartLocation = WorldEndLocation;
 			WorldEndLocation = SwapLocation;
 		}
 		else {
-			ActorLocation += Speed * DeltaTime * MoveDirection.GetSafeNormal();
+			ActorLocation += Speed * DeltaTime * MoveDirection;
 			SetActorLocation(ActorLocation);
 		}
 
