@@ -33,7 +33,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MoveInfo", meta = (MakeEditWidget = true))
 	FVector TargetLocation;
 
+	void AddActiveTrigger();
+
+	void RemoveActiveTrigger();
+
 private:
 	FVector WorldStartLocation;
 	FVector WorldEndLocation;
+
+	/**
+	 * Active Trigger
+	 */
+	UPROPERTY(EditAnywhere, Category = "Trigger Volumes")
+	int ActiveTriggers = 1;
 };

@@ -31,6 +31,12 @@ private:
 	class UBoxComponent* TriggerVolume;
 
 	/**
+	 * Platforms that triggers
+	 */
+	UPROPERTY(EditAnywhere, Category = "MovingPlatforms")
+	TArray<class AMovingPlatform*> MovingPlatforms;
+
+	/**
 	 * Callback function of OnComponentBeginOverlap
 	 * @param Comment
 	 * @return Comment

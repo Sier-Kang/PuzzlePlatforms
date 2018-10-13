@@ -52,3 +52,13 @@ void AMovingPlatform::Tick(float DeltaTime)
 		// UE_LOG(LogTemp, Warning, TEXT("I'm in Server. My Role is ROLE_Authority"));
 	}
 }
+
+void AMovingPlatform::AddActiveTrigger() 
+{
+
+}
+
+void AMovingPlatform::RemoveActiveTrigger() 
+{
+
+}
