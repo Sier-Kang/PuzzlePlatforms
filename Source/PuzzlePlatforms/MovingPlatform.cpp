@@ -23,7 +23,7 @@ void AMovingPlatform::BeginPlay()
 
 		// Move Props
 		WorldStartLocation = GetActorLocation();
-		WorldEndLocation = GetTransform().TransformPosition(TargetLocation);
+		WorldTargetLocation = GetTransform().TransformPosition(TargetLocation);
 	}
 }
 
@@ -31,34 +31,40 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (HasAuthority())
+	if (ActiveTriggers > 0)
 	{
-		FVector ActorLocation = GetActorLocation();
-		float TotalLength = (WorldEndLocation - WorldStartLocation).Size();
-		float CurrentLength = (WorldEndLocation - ActorLocation).Size();
-		FVector MoveDirection = (WorldEndLocation - WorldStartLocation).GetSafeNormal();
-
-		if (CurrentLength >= TotalLength)
+		if (HasAuthority())
 		{
-			FVector SwapLocation = WorldStartLocation;
-			WorldStartLocation = WorldEndLocation;
-			WorldEndLocation = SwapLocation;
-		}
-		else {
-			ActorLocation += Speed * DeltaTime * MoveDirection;
-			SetActorLocation(ActorLocation);
-		}
+			FVector ActorLocation = GetActorLocation();
+			float JourneyLength = (WorldTargetLocation - WorldStartLocation).Size();
+			float JourneyTravelled = (WorldStartLocation - ActorLocation).Size();
+			FVector MoveDirection = (WorldTargetLocation - WorldStartLocation).GetSafeNormal();
 
-		// UE_LOG(LogTemp, Warning, TEXT("I'm in Server. My Role is ROLE_Authority"));
+			if (JourneyTravelled >= JourneyLength)
+			{
+				FVector SwapLocation = WorldStartLocation;
+				WorldStartLocation = WorldTargetLocation;
+				WorldTargetLocation = SwapLocation;
+			}
+			else {
+				ActorLocation += Speed * DeltaTime * MoveDirection;
+				SetActorLocation(ActorLocation);
+			}
+
+			// UE_LOG(LogTemp, Warning, TEXT("I'm in Server. My Role is ROLE_Authority"));
+		}
 	}
 }
 
 void AMovingPlatform::AddActiveTrigger() 
 {
-
+	ActiveTriggers++;
 }
 
 void AMovingPlatform::RemoveActiveTrigger() 
 {
-
+	if (ActiveTriggers > 0)
+	{
+		ActiveTriggers--;
+	}
 }

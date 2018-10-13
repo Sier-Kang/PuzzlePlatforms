@@ -39,11 +39,12 @@ public:
 
 private:
 	FVector WorldStartLocation;
-	FVector WorldEndLocation;
+
+	FVector WorldTargetLocation;
 
 	/**
 	 * Active Trigger
 	 */
 	UPROPERTY(EditAnywhere, Category = "Trigger Volumes")
-	int ActiveTriggers = 1;
+	int ActiveTriggers = 0;
 };
