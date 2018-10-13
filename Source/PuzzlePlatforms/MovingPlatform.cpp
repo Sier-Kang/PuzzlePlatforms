@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MovingPlatform.h"
+#include "UnrealNetwork.h"
 
 
 AMovingPlatform::AMovingPlatform()
@@ -14,22 +15,38 @@ void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HasAuthority()) 
+	{
+		SetReplicates(true);
+		SetReplicateMovement(true);
 
+		WorldStartLocation = GetActorLocation();
+		WorldEndLocation = GetTransform().TransformPosition(TargetLocation);
+	}
 }
 
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Role == ROLE_Authority)
+	if (HasAuthority())
 	{
 		FVector ActorLocation = GetActorLocation();
-		ActorLocation += FVector(Speed * DeltaTime, 0, 0);
-		SetActorLocation(ActorLocation);
+		float CurrentLength = (WorldEndLocation - ActorLocation).Size();
+		float TotalLength = (WorldStartLocation - WorldEndLocation).Size();
+		FVector MoveDirection = WorldEndLocation - WorldStartLocation;
 
-		// UE_LOG(LogTemp, Warning, TEXT("I'm in Server. My Role is %s ...."), Role);
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("I'm in Client."));
+		if (CurrentLength > TotalLength)
+		{
+			FVector SwapLocation = WorldStartLocation;
+			WorldStartLocation = WorldEndLocation;
+			WorldEndLocation = SwapLocation;
+		}
+		else {
+			ActorLocation += Speed * DeltaTime * MoveDirection.GetSafeNormal();
+			SetActorLocation(ActorLocation);
+		}
+
+		// UE_LOG(LogTemp, Warning, TEXT("I'm in Server. My Role is ROLE_Authority"));
 	}
 }

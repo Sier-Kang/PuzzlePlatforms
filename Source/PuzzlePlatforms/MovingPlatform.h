@@ -24,7 +24,16 @@ public:
 	/**
 	 * Speed that the box moves.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveInfo")
 	float Speed = 20.0f;
 
+	/**
+	 * Actor's location.
+	 */
+	UPROPERTY(EditAnywhere, Category = "MoveInfo", meta = (MakeEditWidget = true))
+	FVector TargetLocation;
+
+private:
+	FVector WorldStartLocation;
+	FVector WorldEndLocation;
 };
